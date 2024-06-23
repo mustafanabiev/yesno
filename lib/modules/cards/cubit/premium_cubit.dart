@@ -4,7 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'premium_state.dart';
 
 class PremiumCubit extends Cubit<PremiumState> {
-  PremiumCubit() : super(PremiumState(premium: false));
+  PremiumCubit() : super(PremiumState(premium: false)) {
+    loadPremiumState();
+  }
 
   void loadPremiumState() async {
     final prefs = await SharedPreferences.getInstance();

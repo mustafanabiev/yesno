@@ -23,11 +23,12 @@ class GetStartView extends StatelessWidget {
                     final SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     await prefs.setBool('isAuth', true);
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const Bottomnavigation(),
                       ),
+                      (route) => false,
                     );
                   },
                   child: const Icon(
@@ -53,13 +54,17 @@ class GetStartView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
-                'Here you can get the answer to any question, the answer to which will be yes or no. Just focus on your question, choose the method - cards or the Ouiji board, and get the answer!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Onest',
-                  fontWeight: FontWeight.w300,
-                  fontSize: 16,
+              const SizedBox(
+                width: 343,
+                child: Text(
+                  'Here you can get the answer to any question, the answer to which will be yes or no. Just focus on your question, choose the method - cards or the Ouiji board, and get the answer!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFFF8F8F8),
+                    fontSize: 16,
+                    fontFamily: 'Onest',
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
               ),
               const Spacer(flex: 2),
@@ -68,11 +73,12 @@ class GetStartView extends StatelessWidget {
                   final SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   await prefs.setBool('isAuth', true);
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const Bottomnavigation(),
                     ),
+                    (route) => false,
                   );
                 },
                 child: Container(

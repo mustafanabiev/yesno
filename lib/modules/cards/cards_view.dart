@@ -79,15 +79,18 @@ class _CardsViewState extends State<CardsView> {
                 child: TabBarView(
                   children: [
                     const Basic(),
-                    BlocBuilder<PremiumCubit, PremiumState>(
-                      builder: (context, state) {
-                        if (state.premium) {
-                          return const Premium();
-                        } else {
-                          return const PremiumWidget();
-                        }
-                      },
-                    ),
+                    context.watch<PremiumCubit>().state.premium
+                        ? const Premium()
+                        : const PremiumWidget(),
+                    // BlocBuilder<PremiumCubit, PremiumState>(
+                    //   builder: (context, state) {
+                    //     if (state.premium) {
+                    //       return const Premium();
+                    //     } else {
+                    //       return const PremiumWidget();
+                    //     }
+                    //   },
+                    // ),
                   ],
                 ),
               ),

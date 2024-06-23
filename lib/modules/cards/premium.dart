@@ -53,7 +53,6 @@ class _PremiumState extends State<Premium> {
             } else {
               context.read<CardCubit>().updateCount(false);
             }
-
             _showQuestionImage = true;
             _countdown = 5;
             _currentImageIndex = 0;
