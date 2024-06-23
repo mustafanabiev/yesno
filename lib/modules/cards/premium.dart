@@ -68,11 +68,13 @@ class _PremiumState extends State<Premium> {
   void _startCountdown() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (_countdown > 0) {
+        if (_countdown > 1) {
           _countdown--;
+        } else if (_countdown == 1) {
+          _countdown--;
+          _showQuestionImage = false;
         } else {
           _timer?.cancel();
-          _showQuestionImage = false;
           _startImageSlider();
         }
       });
@@ -91,46 +93,47 @@ class _PremiumState extends State<Premium> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _showQuestionImage
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 36,
-                    height: 36,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xff3A408E),
-                          Color(0xff6069D7),
-                        ],
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        _countdown.toString(),
-                        style: const TextStyle(
-                          fontFamily: 'Onest',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: Color(0xffF9F9F9),
-                        ),
-                      ),
+        if (_countdown > 0)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xff3A408E),
+                      Color(0xff6069D7),
+                    ],
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    _countdown.toString(),
+                    style: const TextStyle(
+                      fontFamily: 'Onest',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: Color(0xffF9F9F9),
                     ),
                   ),
-                  const SizedBox(height: 50),
-                  Image.asset(
-                    'assets/images/question.png',
-                    height: 276,
-                  ),
-                ],
-              )
-            : Center(
-                child: SvgPicture.asset(
-                  'assets/images/${_selectedImageList[_currentImageIndex]}.svg',
                 ),
               ),
+              const SizedBox(height: 50),
+              Image.asset(
+                'assets/images/question.png',
+                height: 276,
+              ),
+            ],
+          )
+        else if (!_showQuestionImage)
+          Center(
+            child: SvgPicture.asset(
+              'assets/images/${_selectedImageList[_currentImageIndex]}.svg',
+            ),
+          ),
       ],
     );
   }
