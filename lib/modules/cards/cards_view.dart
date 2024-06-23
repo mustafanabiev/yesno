@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yesno/modules/cards/basic.dart';
 import 'package:yesno/modules/cards/premium.dart';
-import 'package:yesno/modules/cubit/premium_cubit.dart';
+import 'package:yesno/modules/cards/cubit/premium_cubit.dart';
 
 class CardsView extends StatefulWidget {
   const CardsView({super.key});

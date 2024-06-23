@@ -4,8 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:yesno/modules/cubit/card_cubit.dart';
-import 'package:yesno/modules/cubit/premium_cubit.dart';
+import 'package:yesno/modules/cards/cubit/card_cubit.dart';
+import 'package:yesno/modules/cards/cubit/premium_cubit.dart';
 
 class Premium extends StatefulWidget {
   const Premium({super.key});

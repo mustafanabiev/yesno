@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:yesno/modules/cards/cards_view.dart';
 import 'package:yesno/modules/result/result_view.dart';
@@ -14,6 +15,26 @@ class Bottomnavigation extends StatefulWidget {
 class _BottomnavigationState extends State<Bottomnavigation> {
   int currentIndex = 0;
   bool currentIcon = false;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    requestNotificationPermission();
+    super.initState();
+  }
+
+  void requestNotificationPermission() async {
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      iOS: DarwinInitializationSettings(
+        onDidReceiveLocalNotification:
+            (int id, String? title, String? body, String? payload) async {},
+      ),
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
 
   final List<Widget> pages = <Widget>[
     const CardsView(),

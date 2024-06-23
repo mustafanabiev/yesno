@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yesno/modules/cubit/card_cubit.dart';
+import 'package:yesno/modules/cards/cubit/card_cubit.dart';
 
 class ResultView extends StatelessWidget {
   const ResultView({super.key});

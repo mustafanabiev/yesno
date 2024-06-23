@@ -1,39 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yesno/modules/bottomnavigation.dart';
 import 'package:yesno/modules/main/get_start_view.dart';
 
-class SplashView extends StatefulWidget {
-  const SplashView({super.key});
+class SplashView extends StatelessWidget {
+  const SplashView({super.key, required this.prefs});
+
+  final SharedPreferences prefs;
 
   @override
-  State<SplashView> createState() => _SplashViewState();
-}
-
-class _SplashViewState extends State<SplashView> {
-  @override
-  void initState() {
-    super.initState();
-    _startSplashScreenTimer();
-  }
-
-  void _startSplashScreenTimer() {
+  Widget build(BuildContext context) {
     Future.delayed(
         const Duration(
           seconds: 2,
         ), () {
-      _navigateToHome();
+      if (prefs.getBool('isAuth') != null && prefs.getBool('isAuth') != false) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => const Bottomnavigation(),
+          ),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => const GetStartView(),
+          ),
+        );
+      }
     });
-  }
-
-  void _navigateToHome() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => const GetStartView(),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Center(

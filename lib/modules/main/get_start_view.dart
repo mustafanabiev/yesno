@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yesno/modules/bottomnavigation.dart';
 
 class GetStartView extends StatelessWidget {
@@ -18,7 +19,10 @@ class GetStartView extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    await prefs.setBool('isAuth', true);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -60,7 +64,10 @@ class GetStartView extends StatelessWidget {
               ),
               const Spacer(flex: 2),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setBool('isAuth', true);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
