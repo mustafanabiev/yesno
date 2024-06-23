@@ -13,6 +13,12 @@ class CardsView extends StatefulWidget {
 
 class _CardsViewState extends State<CardsView> {
   @override
+  void initState() {
+    context.read<PremiumCubit>().loadPremiumState();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
@@ -73,9 +79,9 @@ class _CardsViewState extends State<CardsView> {
                 child: TabBarView(
                   children: [
                     const Basic(),
-                    BlocBuilder<PremiumCubit, bool>(
+                    BlocBuilder<PremiumCubit, PremiumState>(
                       builder: (context, state) {
-                        if (state) {
+                        if (state.premium) {
                           return const Premium();
                         } else {
                           return const PremiumWidget();

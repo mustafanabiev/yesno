@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:yesno/modules/cards/cubit/premium_cubit.dart';
+import 'package:yesno/modules/main/premium_view.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -32,43 +35,59 @@ class _SettingsViewState extends State<SettingsView> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            _switchValue == false
-                ? const SizedBox()
-                : Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    width: double.infinity,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xff3A408E),
-                          Color(0xff6069D7),
-                        ],
+            BlocBuilder<PremiumCubit, PremiumState>(
+              builder: (context, state) {
+                if (state.premium != false) {
+                  return const SizedBox();
+                } else {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PremiumView(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      width: double.infinity,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xff3A408E),
+                            Color(0xff6069D7),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: const Color(0xffF9F9F9).withOpacity(0.05),
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(
-                        color: const Color(0xffF9F9F9).withOpacity(0.05),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset('assets/svg/ph_crown-fill.svg'),
-                          const SizedBox(width: 8),
-                          const Text(
-                            'Subscription management',
-                            style: TextStyle(
-                              fontFamily: 'Onest',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: Color(0xffF9F9F9),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset('assets/svg/ph_crown-fill.svg'),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Subscription management',
+                              style: TextStyle(
+                                fontFamily: 'Onest',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Color(0xffF9F9F9),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+                  );
+                }
+              },
+            ),
             Container(
               width: double.infinity,
               height: 56,

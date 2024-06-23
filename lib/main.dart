@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           create: (context) => CardCubit()..loadFromPreferences(),
         ),
         BlocProvider(
-          create: (context) => PremiumCubit(),
+          create: (context) => PremiumCubit()..loadPremiumState(),
         ),
         BlocProvider(
           create: (context) => MainCubit()..loadAuthState(),

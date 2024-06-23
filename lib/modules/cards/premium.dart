@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:yesno/modules/cards/cubit/card_cubit.dart';
-import 'package:yesno/modules/cards/cubit/premium_cubit.dart';
+import 'package:yesno/modules/main/premium_view.dart';
 
 class Premium extends StatefulWidget {
   const Premium({super.key});
@@ -75,7 +75,6 @@ class _PremiumState extends State<Premium> {
           _showQuestionImage = false;
         } else {
           _timer?.cancel();
-          _startImageSlider();
         }
       });
     });
@@ -130,8 +129,13 @@ class _PremiumState extends State<Premium> {
           )
         else if (!_showQuestionImage)
           Center(
-            child: SvgPicture.asset(
-              'assets/images/${_selectedImageList[_currentImageIndex]}.svg',
+            child: GestureDetector(
+              onTap: () {
+                _startImageSlider();
+              },
+              child: SvgPicture.asset(
+                'assets/images/${_selectedImageList[_currentImageIndex]}.svg',
+              ),
             ),
           ),
       ],
@@ -191,7 +195,12 @@ class PremiumWidget extends StatelessWidget {
               const Spacer(flex: 4),
               GestureDetector(
                 onTap: () {
-                  context.read<PremiumCubit>().setPremium();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PremiumView(),
+                    ),
+                  );
                 },
                 child: Container(
                   width: double.infinity,

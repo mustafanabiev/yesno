@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yesno/modules/cards/cubit/premium_cubit.dart';
 
 class PremiumView extends StatelessWidget {
   const PremiumView({super.key});
@@ -12,12 +14,17 @@ class PremiumView extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 16),
-              const Align(
+              Align(
                 alignment: Alignment.centerRight,
-                child: Icon(
-                  Icons.close_rounded,
-                  size: 28,
-                  color: Color(0xffF9F9F9),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.close_rounded,
+                    size: 28,
+                    color: Color(0xffF9F9F9),
+                  ),
                 ),
               ),
               const Spacer(flex: 3),
@@ -47,7 +54,10 @@ class PremiumView extends StatelessWidget {
               ),
               const Spacer(flex: 2),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  context.read<PremiumCubit>().premium();
+                  Navigator.pop(context);
+                },
                 child: Container(
                   width: double.infinity,
                   height: 48,
