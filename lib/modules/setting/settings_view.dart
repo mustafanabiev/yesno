@@ -16,6 +16,12 @@ class _SettingsViewState extends State<SettingsView> {
   bool _switchValue = false;
 
   @override
+  void initState() {
+    context.read<PremiumCubit>().loadPremiumState();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
