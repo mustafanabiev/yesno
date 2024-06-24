@@ -27,7 +27,6 @@ class _BasicState extends State<Basic> {
   @override
   void initState() {
     super.initState();
-    _startCountdown();
   }
 
   void _startCountdown() {
@@ -49,7 +48,6 @@ class _BasicState extends State<Basic> {
         basic = false;
         showingResult = false;
         flipX = false;
-        _startCountdown();
       });
     });
   }
@@ -120,7 +118,12 @@ class _BasicState extends State<Basic> {
             ),
           ),
           const SizedBox(height: 50),
-          Image.asset('assets/images/question.png', height: 276),
+          GestureDetector(
+            onTap: () {
+              _startCountdown();
+            },
+            child: Image.asset('assets/images/question.png', height: 276),
+          ),
         ],
       ),
     );
@@ -139,84 +142,74 @@ class _BasicState extends State<Basic> {
               double horizontalOffset = index == 0 ? 0 : 110;
               double verticalOffset = index == 0 ? -10 : 0;
               double rotationAngle = index == 0 ? -0.1 : 0;
-
-              if (index == 1) {
-                return Transform.translate(
-                  offset: Offset(horizontalOffset, verticalOffset),
-                  child: Transform.rotate(
-                    angle: rotationAngle,
-                    child: DragTarget<String>(
-                      onAcceptWithDetails: (details) {
+              return Transform.translate(
+                offset: Offset(horizontalOffset, verticalOffset),
+                child: Transform.rotate(
+                  angle: rotationAngle,
+                  child: Draggable<String>(
+                    data: imagePath,
+                    feedback: Material(
+                      type: MaterialType.transparency,
+                      child: Image.asset(imagePath, height: 276),
+                    ),
+                    childWhenDragging: Container(),
+                    child: GestureDetector(
+                      onTap: () {
+                        if (index == 1) {
+                          setState(() {
+                            basic = true;
+                          });
+                        } else {
+                          setState(() {
+                            String temp = _items[0];
+                            _items[0] = _items[1];
+                            _items[1] = temp;
+                            flipX = !flipX;
+                          });
+                        }
+                      },
+                      child: DragTarget<String>(
+                        onAccept: (data) {
+                          if (index == 1) {
+                            setState(() {
+                              basic = true;
+                            });
+                          }
+                        },
+                        builder: (BuildContext context, List<dynamic> accepted,
+                            List<dynamic> rejected) {
+                          return Image.asset(
+                            imagePath,
+                            key: ValueKey(imagePath),
+                            fit: BoxFit.contain,
+                          );
+                        },
+                      ),
+                    ),
+                    onDraggableCanceled: (velocity, offset) {
+                      if (index == 1) {
                         setState(() {
                           basic = true;
                         });
-                      },
-                      builder: (BuildContext context, List<dynamic> accepted,
-                          List<dynamic> rejected) {
-                        return Draggable<String>(
-                          onDraggableCanceled: (velocity, offset) {
-                            setState(() {
-                              basic = true;
-                            });
-                          },
-                          onDragCompleted: () {
-                            setState(() {
-                              basic = true;
-                            });
-                          },
-                          onDragEnd: (details) {
-                            if (!details.wasAccepted) {
-                              setState(() {
-                                basic = true;
-                              });
-                            }
-                          },
-                          data: imagePath,
-                          feedback: Material(
-                            type: MaterialType.transparency,
-                            child: Image.asset(imagePath, height: 276),
-                          ),
-                          childWhenDragging: Container(),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                basic = true;
-                              });
-                            },
-                            child: Image.asset(
-                              imagePath,
-                              key: ValueKey(imagePath),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                );
-              } else {
-                return Transform.translate(
-                  offset: Offset(horizontalOffset, verticalOffset),
-                  child: Transform.rotate(
-                    angle: rotationAngle,
-                    child: GestureDetector(
-                      onTap: () {
+                      }
+                    },
+                    onDragCompleted: () {
+                      if (index == 1) {
                         setState(() {
-                          String temp = _items[0];
-                          _items[0] = _items[1];
-                          _items[1] = temp;
-                          flipX = !flipX;
+                          basic = true;
                         });
-                      },
-                      child: Image.asset(
-                        imagePath,
-                        key: ValueKey(imagePath),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                      }
+                    },
+                    onDragEnd: (details) {
+                      if (!details.wasAccepted && index == 1) {
+                        setState(() {
+                          basic = true;
+                        });
+                      }
+                    },
                   ),
-                );
-              }
+                ),
+              );
             }),
           ),
         ),

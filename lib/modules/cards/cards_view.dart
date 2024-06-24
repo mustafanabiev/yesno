@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:yesno/modules/cards/basic.dart';
 import 'package:yesno/modules/cards/premium.dart';
 import 'package:yesno/modules/cards/cubit/premium_cubit.dart';
@@ -23,7 +26,9 @@ class _CardsViewState extends State<CardsView> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: const Color(0xff0A0E16),
         appBar: AppBar(
+          backgroundColor: const Color(0xff0A0E16),
           automaticallyImplyLeading: false,
           title: const Text(
             'CARDS',
@@ -82,15 +87,6 @@ class _CardsViewState extends State<CardsView> {
                     context.watch<PremiumCubit>().state.premium
                         ? const Premium()
                         : const PremiumWidget(),
-                    // BlocBuilder<PremiumCubit, PremiumState>(
-                    //   builder: (context, state) {
-                    //     if (state.premium) {
-                    //       return const Premium();
-                    //     } else {
-                    //       return const PremiumWidget();
-                    //     }
-                    //   },
-                    // ),
                   ],
                 ),
               ),

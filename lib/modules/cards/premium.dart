@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yesno/modules/cards/cubit/card_cubit.dart';
 import 'package:yesno/modules/main/premium_view.dart';
 
 class Premium extends StatefulWidget {
-  const Premium({super.key});
+  const Premium({Key? key}) : super(key: key);
 
   @override
   State<Premium> createState() => _PremiumState();
@@ -27,12 +28,13 @@ class _PremiumState extends State<Premium> {
   void initState() {
     super.initState();
     _selectedImageList = _selectRandomImageList();
-    _startCountdown();
   }
 
   List<String> _selectRandomImageList() {
     final random = Random();
-    return random.nextBool() ? yesImage : noImage;
+    return random.nextBool()
+        ? ['oujia_board']
+        : ['oujia_no']; // Example, adjust as needed
   }
 
   void _startImageSlider() {
@@ -48,16 +50,10 @@ class _PremiumState extends State<Premium> {
             _currentImageIndex++;
             _startImageSlider();
           } else {
-            if (_selectedImageList == yesImage) {
-              context.read<CardCubit>().updateCount(true);
-            } else {
-              context.read<CardCubit>().updateCount(false);
-            }
             _showQuestionImage = true;
             _countdown = 5;
             _currentImageIndex = 0;
             _selectedImageList = _selectRandomImageList();
-            _startCountdown();
           }
         });
       },
@@ -74,6 +70,7 @@ class _PremiumState extends State<Premium> {
           _showQuestionImage = false;
         } else {
           _timer?.cancel();
+          _startImageSlider();
         }
       });
     });
@@ -84,6 +81,11 @@ class _PremiumState extends State<Premium> {
     _timer?.cancel();
     _sliderTimer?.cancel();
     super.dispose();
+  }
+
+  void _onQuestionImageTap() {
+    if (!_showQuestionImage) return;
+    _startCountdown();
   }
 
   @override
@@ -120,9 +122,12 @@ class _PremiumState extends State<Premium> {
                 ),
               ),
               const SizedBox(height: 50),
-              Image.asset(
-                'assets/images/question.png',
-                height: 276,
+              GestureDetector(
+                onTap: _onQuestionImageTap,
+                child: Image.asset(
+                  'assets/images/question.png',
+                  height: 276,
+                ),
               ),
             ],
           )
@@ -132,12 +137,367 @@ class _PremiumState extends State<Premium> {
               onTap: () {
                 _startImageSlider();
               },
-              child: SvgPicture.asset(
-                'assets/images/${_selectedImageList[_currentImageIndex]}.svg',
-              ),
+              child: _selectedImageList[_currentImageIndex] == 'oujia_board'
+                  ? const YesPage()
+                  : const NoPage(),
             ),
           ),
       ],
+    );
+  }
+}
+
+class YesPage extends StatefulWidget {
+  const YesPage({super.key});
+
+  @override
+  State<YesPage> createState() => _YesPageState();
+}
+
+class _YesPageState extends State<YesPage> with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late AnimationController _upwardController;
+  late AnimationController _thirdController;
+  late Animation<double> _translationXAnimation;
+  late Animation<double> _translationYAnimation;
+  late Animation<double> _rotationAnimation;
+
+  late Animation<double> _upwardTranslationXAnimation;
+  late Animation<double> _upwardTranslationYAnimation;
+  late Animation<double> _secondRotationAnimation;
+
+  late Animation<double> _thirdTranslationXAnimation;
+  late Animation<double> _thirdTranslationYAnimation;
+  late Animation<double> _thirdRotationAnimation;
+
+  late String _currentBackgroundImage;
+
+  bool _animationStarted = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..addListener(() {
+        if (_controller.value >= 1.0 && _animationStarted) {
+          setState(() {
+            _currentBackgroundImage = 'assets/images/oujia_y.png';
+          });
+          _upwardController.forward();
+        }
+      });
+
+    _upwardController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..addListener(() {
+        if (_upwardController.value >= 1.0) {
+          setState(() {
+            _currentBackgroundImage = 'assets/images/oujia_ye.png';
+          });
+          _thirdController.forward();
+        }
+      });
+
+    _thirdController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..addListener(() {
+        if (_thirdController.value >= 1.0) {
+          setState(() {
+            _currentBackgroundImage = 'assets/images/oujia_yes.png';
+          });
+        }
+      });
+
+    _translationXAnimation = Tween<double>(
+      begin: -1.8,
+      end: -0.43,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    _translationYAnimation = Tween<double>(
+      begin: -0.9,
+      end: -1.32,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    _rotationAnimation = Tween<double>(
+      begin: 0,
+      end: 0.59,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    _upwardTranslationXAnimation = Tween<double>(
+      begin: -0.43,
+      end: -1.97,
+    ).animate(CurvedAnimation(
+      parent: _upwardController,
+      curve: Curves.easeInOut,
+    ));
+
+    _upwardTranslationYAnimation = Tween<double>(
+      begin: -1.32,
+      end: -2.05,
+    ).animate(CurvedAnimation(
+      parent: _upwardController,
+      curve: Curves.easeInOut,
+    ));
+
+    _secondRotationAnimation = Tween<double>(
+      begin: 0.59,
+      end: -0.04,
+    ).animate(CurvedAnimation(
+      parent: _upwardController,
+      curve: Curves.easeInOut,
+    ));
+
+    _thirdTranslationXAnimation = Tween<double>(
+      begin: -1.97,
+      end: -2.02, // Slightly to the right for the third point
+    ).animate(CurvedAnimation(
+      parent: _thirdController,
+      curve: Curves.easeInOut,
+    ));
+
+    _thirdTranslationYAnimation = Tween<double>(
+      begin: -2.05,
+      end: -1.56, // Further upward for the third point
+    ).animate(CurvedAnimation(
+      parent: _thirdController,
+      curve: Curves.easeInOut,
+    ));
+
+    _thirdRotationAnimation = Tween<double>(
+      begin: -0.04,
+      end: -0.1, // Rotation value for the third point
+    ).animate(CurvedAnimation(
+      parent: _thirdController,
+      curve: Curves.easeInOut,
+    ));
+
+    _currentBackgroundImage = 'assets/images/oujia_board.png';
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _upwardController.dispose();
+    _thirdController.dispose();
+    super.dispose();
+  }
+
+  void _startAnimation() {
+    context.read<CardCubit>().updateCount(true);
+    setState(() {
+      _animationStarted = true;
+    });
+    _controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: _startAnimation,
+        child: Container(
+          width: double.infinity,
+          height: 343,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(_currentBackgroundImage),
+            ),
+          ),
+          child: AnimatedBuilder(
+            animation: Listenable.merge(
+                [_controller, _upwardController, _thirdController]),
+            builder: (context, child) {
+              return Align(
+                alignment: Alignment.bottomRight,
+                child: FractionalTranslation(
+                  translation: Offset(
+                    _controller.isCompleted
+                        ? (_upwardController.isCompleted
+                            ? _thirdTranslationXAnimation.value
+                            : _upwardTranslationXAnimation.value)
+                        : _translationXAnimation.value,
+                    _controller.isCompleted
+                        ? (_upwardController.isCompleted
+                            ? _thirdTranslationYAnimation.value
+                            : _upwardTranslationYAnimation.value)
+                        : _translationYAnimation.value,
+                  ),
+                  child: Transform.rotate(
+                    angle: _controller.isCompleted
+                        ? (_upwardController.isCompleted
+                            ? _thirdRotationAnimation.value
+                            : _secondRotationAnimation.value)
+                        : _rotationAnimation.value,
+                    child: SvgPicture.asset('assets/svg/indicator.svg'),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NoPage extends StatefulWidget {
+  const NoPage({super.key});
+
+  @override
+  State<NoPage> createState() => _NoPageState();
+}
+
+class _NoPageState extends State<NoPage> with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late AnimationController _secondController;
+  late Animation<double> _translationXAnimation;
+  late Animation<double> _translationYAnimation;
+  late Animation<double> _secondTranslationXAnimation;
+  late Animation<double> _secondTranslationYAnimation;
+  late Animation<double>? _rotationAnimation;
+
+  late String _currentBackgroundImage;
+  bool _animationStarted = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..addListener(() {
+        if (_controller.value >= 0.5 && _controller.value < 1.0) {
+          setState(() {
+            _currentBackgroundImage = 'assets/images/oujia_n.png';
+          });
+        } else if (_controller.value >= 1.0 && _animationStarted) {
+          _secondController.forward();
+        }
+      });
+
+    _secondController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..addListener(() {
+        if (_secondController.value >= 1.0) {
+          setState(() {
+            _currentBackgroundImage = 'assets/images/oujia_no.png';
+          });
+        }
+      });
+
+    _translationXAnimation = Tween<double>(
+      begin: -1.8,
+      end: -3.2,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.5, curve: Curves.easeInOut),
+    ));
+
+    _translationYAnimation = Tween<double>(
+      begin: -0.9,
+      end: -1.15,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.5, curve: Curves.easeInOut),
+    ));
+
+    _secondTranslationXAnimation = Tween<double>(
+      begin: -3.2,
+      end: -2.952,
+    ).animate(CurvedAnimation(
+      parent: _secondController,
+      curve: Curves.easeInOut,
+    ));
+
+    _secondTranslationYAnimation = Tween<double>(
+      begin: -1.15,
+      end: -1.32,
+    ).animate(CurvedAnimation(
+      parent: _secondController,
+      curve: Curves.easeInOut,
+    ));
+
+    _rotationAnimation = Tween<double>(
+      begin: 0,
+      end: -0.6,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    _currentBackgroundImage = 'assets/images/oujia_board.png';
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _secondController.dispose();
+    super.dispose();
+  }
+
+  void _startAnimation() {
+    context.read<CardCubit>().updateCount(false);
+    setState(() {
+      _animationStarted = true;
+    });
+    _controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: _startAnimation,
+        child: Container(
+          width: double.infinity,
+          height: 343,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(_currentBackgroundImage),
+            ),
+          ),
+          child: AnimatedBuilder(
+            animation: Listenable.merge([_controller, _secondController]),
+            builder: (context, child) {
+              return Align(
+                alignment: Alignment.bottomRight,
+                child: FractionalTranslation(
+                  translation: Offset(
+                    _controller.value < 1.0
+                        ? _translationXAnimation.value
+                        : _secondTranslationXAnimation.value,
+                    _controller.value < 1.0
+                        ? _translationYAnimation.value
+                        : _secondTranslationYAnimation.value,
+                  ),
+                  child: Transform.rotate(
+                    angle: _controller.value < 1.0
+                        ? _rotationAnimation!.value
+                        : -0.6,
+                    child: SvgPicture.asset('assets/svg/indicator.svg'),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }
