@@ -4,8 +4,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'card_state.dart';
 
 class CardCubit extends Cubit<CardState> {
-  CardCubit() : super(const CardState(yesCount: 0, noCount: 0)) {
+  CardCubit()
+      : super(const CardState(
+          yesCount: 0,
+          noCount: 0,
+          restart: true,
+        )) {
     loadFromPreferences();
+  }
+
+  void reset(bool reset) {
+    emit(state.copyWith(restart: reset));
   }
 
   void updateCount(bool isYes) async {
